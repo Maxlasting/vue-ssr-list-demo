@@ -17,6 +17,8 @@ export default ctx => new Promise((resolve, reject) => {
   // 如果一致，直接跳转到对应的 url
   router.push(url)
 
+  ctx.meta = app.$meta()
+
   // 在路由可以跳转的时候，此时要加载对应的组件，找到其中的 asyncData 钩子函数，以便执行异步操作
   router.onReady(() => {
     const matchedComponents = router.getMatchedComponents()

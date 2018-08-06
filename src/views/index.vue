@@ -88,6 +88,15 @@
       router.replace('/login')
       return Promise.resolve()
     },
+    metaInfo: {
+      title: 'User List',
+      meta: [
+        {
+          name: 'description',
+          context: 'User List'
+        }
+      ]
+    },
     data () {
       return {
         tableHeaders: [

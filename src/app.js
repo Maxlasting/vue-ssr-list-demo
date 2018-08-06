@@ -8,7 +8,10 @@ import { sync } from 'vuex-router-sync'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
+import Meta from 'vue-meta'
+
 Vue.use(Vuetify)
+Vue.use(Meta)
 
 // 去掉生产环境的提示信息
 Vue.config.productionTip = false

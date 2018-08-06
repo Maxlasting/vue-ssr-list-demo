@@ -47,6 +47,15 @@
   import { mapActions, mapState, mapMutations } from 'vuex'
 
   export default {
+    metaInfo: {
+      title: 'User Login',
+      meta: [
+        {
+          name: 'description',
+          context: 'Login'
+        }
+      ]
+    },
     data () {
       return {
         username: '',
