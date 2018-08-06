@@ -1,0 +1,16 @@
+{
+  "name"        : "ssr-list-demo",  // 应用名称
+  "script"      : "./index.js",  // 实际启动脚本
+  "cwd"         : "./",  // 当前工作路径
+  "watch": true,  // 监控变化的目录，一旦变化，自动重启
+  "ignore_watch" : [  // 从监控目录中排除
+    "node_modules", 
+  ],
+  "watch_options": {
+    "followSymlinks": false
+  },
+  "env": {
+      "NODE_ENV": "production",  // 环境参数，当前指定为生产环境
+      "PORT": 7555
+  }
+}
