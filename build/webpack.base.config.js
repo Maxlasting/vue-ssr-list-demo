@@ -1,17 +1,12 @@
-const webpack = require('webpack')
+const { join } = require('path')
 // 用来分离 css 到单独的文件
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
 // 用来处理 .vue 文件中的内容
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 // 优化打包进度显示
 const WebpackProgressOraPlugin = require('webpack-progress-ora-plugin')
-const { join } = require('path')
-// 所有的的静态资源处理 loader
-const staticLoader = require('./static-loader.js')
 
 const config = {
-  // 指定打包模式，分为 development 和 production
-  mode: process.env.NODE_ENV,
   // 输出配置
   output: {
     path: join(__dirname, '../dist'),
@@ -40,8 +35,14 @@ const config = {
         test: /\.vue$/,
         loader: 'vue-loader'
       },
-      // 将静态资源 loader 添加，这个参数只是在 production 环境下才会使用
-      ...staticLoader(MiniCssExtractPlugin)
+      {
+        test: /\.(png|jpe?g|gif|svg|mp4|webm|ogg|mp3|wav|flac|aac|woff2?|eot|ttf|otf)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10240,
+          name: 'static/[name].[ext]?[hash]'
+        }
+      }
     ]
   },
   plugins: [
@@ -49,13 +50,42 @@ const config = {
   ]
 }
 
-// 如果是生产环境，那么就添加提取 css 的插件以及 打包时候的进度优化提示
+if (process.env.NODE_ENV === 'development') {
+  config.module.rules.push(
+    {
+      test: /\.css$/,
+      use: ['vue-style-loader', 'css-loader', 'postcss-loader']
+    }
+  )
+}
+
 if (process.env.NODE_ENV === 'production') {
+  config.module.rules.push(
+    {
+      test: /\.css$/,
+      use: ExtractTextWebpackPlugin.extract({
+        use: [
+          {
+            loader: 'css-loader',
+            options: { minimize: true }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              config: { path: join(__dirname, '../postcss.config.js') }
+            }
+          }
+        ],
+        fallback: 'vue-style-loader'
+      })
+    }
+  )
+
   config.plugins.push(
-    new MiniCssExtractPlugin({
+    new ExtractTextWebpackPlugin({
       filename: '[name]-[contenthash].css'
     }),
-    new WebpackProgressOraPlugin({ clear: true })
+    new WebpackProgressOraPlugin({ clear: false })
   )
 }
 

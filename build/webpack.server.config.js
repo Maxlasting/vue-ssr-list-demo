@@ -11,6 +11,11 @@ const config = merge(baseConfig, {
   entry: {
     app: join(__dirname, '../src/entry-server.js')
   },
+  resolve: {
+    alias: {
+      'create-api': join(__dirname, '../src/model/model-server.js')
+    }
+  },
   // 指定调试工具
   devtool: '#source-map',
   // 打包模式为 node 可用
@@ -21,14 +26,9 @@ const config = merge(baseConfig, {
     libraryTarget: 'commonjs2'
   },
   externals: nodeExternals({
-    // 白名单，排除 css 文件，这里有待考量
-    whitelist: /\.css$/
+    // 白名单，排除 css 文件，后面的参考官方示例，这里有待考量
+    whitelist: [/\.css$/, /\?vue&type=style/]
   }),
-  resolve: {
-    alias: {
-      'create-api': join(__dirname, '../src/model/model-server.js')
-    }
-  },
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
